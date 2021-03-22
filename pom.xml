@@ -11,7 +11,7 @@
 	<groupId>com.oracle</groupId>
 	<artifactId>teamTwo</artifactId>
 	<version>ver1.0</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>teamTwo</name>
 	<description>teamTwo project for Spring Boot</description>
 	<properties>
