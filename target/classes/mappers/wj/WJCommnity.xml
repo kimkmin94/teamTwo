@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Community">
+        <select id="commList" resultType="Community">
+         
+         SELECT * FROM   
+            (SELECT * FROM
+            COMMUNITY
+            ORDER BY B_LIKE_COUNT)
+		<![CDATA[WHERE ROWNUM <= 3]]>
+            
+        </select>
+</mapper>

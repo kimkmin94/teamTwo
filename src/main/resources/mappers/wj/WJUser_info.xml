@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User_info">
+       <select id="wjSelectUser" parameterType="java.lang.String" resultType="User_info">
+         select * from user_info where user_id_email = #{user_id_email}
+       </select>
+</mapper>

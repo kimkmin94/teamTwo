@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Main_category">
+        <select id="selCategory_Lc_num" parameterType="int" resultType="Main_category">
+                select mc_num,subject from main_category where lc_num = #{lc_num} and mc_num != 0 and sc_num = 0
+        </select>
+        <select id="selCategory_Mc_num" parameterType="Main_category" resultType="Main_category">
+                select sc_num,subject from main_category where lc_num = #{lc_num} and mc_num = #{mc_num} and sc_num != 0
+        </select>
+</mapper>

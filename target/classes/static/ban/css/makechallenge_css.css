@@ -1,0 +1,282 @@
+@charset "UTF-8";
+
+
+.wrapper {
+	width: 100%;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
+/* 어떤 챌린지를 만들어볼까요 */
+.makeChalTitleFont {
+	display: inline-block;
+	vertical-align: baseline;
+	font-size: 30px;
+	font-family: 'JalnanOTF';
+}
+
+/* 챌린지 주요정보, 챌린지 상세정보 */
+.subTitleFont {
+	display: inline-block;
+	vertical-align: baseline;
+	font-size: 20px;
+	font-family: 'JalnanOTF';
+}
+
+/* 본문 글씨 */
+.contentFont {
+	display: inline-block;
+	vertical-align: baseline;
+	font-size: 14px;
+	color: #9f6e54;
+	font-family: 'ChosunGu';
+}
+
+/* 가장 작은 회색 안내메시지 글씨 */
+.explainFont {
+	display: inline-block;
+	vertical-align: baseline;
+	font-size: 10px;
+	color: gray;
+	font-family: 'ChosunGu';
+}
+
+/* 위, 아래 테이블 */
+.maintable {
+	width: 600px;
+	margin: 20px;
+	border: 1px solid #ebd39f;
+	font-size: 12pt;
+	font-family: 'ChosunGu';
+	vertical-align: top;
+	margin: auto;
+	padding: 10px;
+	border: 1px solid #ebd39f;
+}
+
+/* 카테고리 & 챗봇추천 셀렉트박스 */
+select {
+	padding: .5em .5em;
+	border: 1px solid #daa35b;
+	font-family: inherit;
+	background: url('../img/arrow.png') no-repeat 97% 50%;
+	border-radius: 0px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	color: #9f6e54;
+}
+
+select:hover {
+	border-color: #daa35b;
+	background-color: #daa35b;
+	color: white;
+	box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+}
+
+/* 네이티브 화살표 숨기기 */
+select::-ms-expand {
+	display: none;
+}
+
+/* 카테고리 셀렉트박스 */
+.select150 {
+	width: 150px;
+}
+
+/* 챗봇추천 셀렉트박스 */
+.select225 {
+	width: 225px;
+}
+
+
+/* 인원수 직접설정 시 input number */
+.numberbox {
+	background: white;
+	border: 1px solid #daa35b;
+	border-radius: 3px;
+	width: 40px;
+	height: 30px;
+	box-sizing: border-box;
+	outline: none;
+	font-family: ChosunGu;
+	font-size: 13px;
+	color: #9f6e54;
+}
+
+/* 직접설정버튼 */
+.button_by {
+	width: 70px;
+	height: 25px;
+	background-color: #daa35b;
+	border: none;
+	border-radius: 3px;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	font-family: 'ChosunGu';
+}
+
+.button_by:hover {
+	color: black;
+}
+
+
+/* 챌린지기간 중복체크 버건디색 버튼 */
+.redbutton {
+	height: 25px;
+	border: none;
+	border-radius: 3px;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	margin: 4px;
+	cursor: pointer;
+	font-family: 'ChosunGu';
+	width: 150px;
+	background-color: #B9062F;
+}
+
+
+input[type="text"]:hover {
+	background-color: #fcf0c9;
+}
+
+/* 챌린지제목 텍스트박스 */
+.title_textbox {
+	background: #daa35b;
+	border: 1px solid #daa35b;
+	border-radius: 3px;
+	width: 457px;
+	height: 33px;
+	box-sizing: border-box;
+	outline: none;
+	font-family: JalnanOTF;
+	font-size: 16px;
+	color: black;
+}
+
+.title_textbox::placeholder {
+	color: white;
+}
+
+/* 인증방법설명 텍스트박스 */
+.explain_textbox {
+	background: white;
+	border: 1px solid #daa35b;
+	border-radius: 3px;
+	width: 457px;
+	height: 30px;
+	box-sizing: border-box;
+	outline: none;
+	font-family: ChosunGu;
+	font-size: 13px;
+	color: #9f6e54;
+}
+
+/* 데이트피커 텍스트박스 */
+.datepic_textbox {
+	background: white;
+	border: 1px solid #daa35b;
+	border-radius: 3px;
+	width: 150px;
+	height: 30px;
+	box-sizing: border-box;
+	outline: none;
+	font-family: ChosunGu;
+	font-size: 13px;
+	color: #9f6e54;
+}
+
+.datepic_textbox::placeholder {
+	color: #9f6e54;
+}
+
+/* 해시태그 텍스트박스 */
+.hashtag_textbox {
+	border: none;
+	margin-right: 5px;
+	background: #9f6e54;
+	border-radius: 13px;
+	width: 70px;
+	height: 25px;
+	box-sizing: border-box;
+	outline: none;
+	font-family: ChosunGu;
+	font-size: 12px;
+	color: white;
+	text-align: center;
+}
+
+.hashtag_textbox::placeholder {
+	color: white;
+}
+
+
+/* 챌린지정원 직접입력 버튼 */
+.capa_self {
+	float: left;
+}
+
+.capa_self_btn {
+	float: left;
+}
+
+/* 글자수 세는 텍스트 */
+.count_text {
+	font-size: 11px;
+	color: gray;
+}
+
+/* 셀렉트박스 영역 */
+.category_div {
+	float: left;
+	margin-right: 5px;
+}
+
+/* 챌린지소개글 textarea */
+textarea {
+	width: 457px;
+	height: 100px;
+	padding: 10px;
+	box-sizing: border-box;
+	border: 1px solid #daa35b;
+	border-radius: 3px;
+	font-size: 14px;
+	font-family: ChosunGu;
+	resize: both;
+	color: #9f6e54;
+}
+
+/* 뒤로가기, 등록 버튼 영역 */
+.two_buttons {
+	text-align: center;
+	display: inline-block;
+}
+
+/* 뒤로가기 버튼 */
+.cancelbtn {
+	float: left;
+	margin: 15px;
+}
+
+/* 등록 버튼 */
+.submitbtn {
+	float: left;
+	margin: 15px;
+}
+
+/* 공백 영역 */
+.empty {
+	height: 17px;
+	width: 100%;
+	margin: 10px;
+	float: left;
+}

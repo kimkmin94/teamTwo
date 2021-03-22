@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Challenge">
+
+
+	<insert id="byregisterChal" parameterType="Challenge">
+
+		<selectKey keyProperty="chg_num" resultType="int"
+			order="BEFORE">
+			select challenge_seq.nextval from dual
+		</selectKey>
+
+		insert into challenge
+
+		(
+		chg_num, lc_num, mc_num, sc_num, chg_master,
+		master_nickname, chg_regdate, chg_startdate, chg_enddate, chg_capacity,
+		chg_title, chg_contents, chg_image, chg_like_count, chg_state,
+		chg_sample_image, chg_sample_text, chg_now_parti
+		)
+
+		values
+		(
+		#{chg_num}, #{lc_num}, #{mc_num}, #{sc_num}, #{chg_master},
+		#{master_nickname}, sysdate, #{chg_startdate},
+		#{chg_enddate}, #{chg_capacity},
+		#{chg_title}, #{chg_contents}, #{chg_image}, #{chg_like_count}, #{chg_state},
+		#{chg_sample_image}, #{chg_sample_text}, #{chg_now_parti}
+		)
+	</insert>
+
+
+	<select id="byuserChallenge" parameterType="java.lang.String" resultType="Challenge">
+
+		select * 
+		from challenge 
+		where chg_master = #{chg_master}
+		
+	</select>
+
+
+</mapper>

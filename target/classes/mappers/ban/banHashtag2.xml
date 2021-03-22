@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Hashtag2">
+
+	<select id="byfindTag" parameterType="java.lang.String" resultType="int">
+		select count(*) as cnt
+		from hashtag2
+		where hashtag_text = #{hashtag_text}
+	</select>
+	
+	<select id="byfindTagNum" parameterType="java.lang.String" resultType="int">
+		select hashtag_num
+		from hashtag2
+		where hashtag_text=#{hashtag_text}
+	</select>
+	
+	<insert id="byaddTag" parameterType="Hashtag2">
+	
+		<selectKey keyProperty="hashtag_num" resultType="int"
+		 order="BEFORE">
+		 select hashtag2_seq.nextval from dual
+		 </selectKey>
+	
+		insert into hashtag2
+		
+		(
+		 hashtag_num, hashtag_text
+		)
+		
+		values
+		(
+		 #{hashtag_num}, #{hashtag_text}
+		)
+	</insert>
+
+
+</mapper>

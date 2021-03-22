@@ -1,0 +1,81 @@
+@charset "UTF-8";
+
+
+/* 상단 공지 영역 */
+.up_notidiv {
+	margin: 30px 0 50px 0;
+	width: 100%;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
+/* 하단 노출 영역 */
+.bottom_tablediv {
+	width: 100%;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
+/* 해시태그 박스 */
+.tagTextbox {
+	border: none;
+	margin-right: 5px;
+	background: #9f6e54;
+	border-radius: 13px;
+	width: 70px;
+	height: 25px;
+	box-sizing: border-box;
+	outline: none;
+	font-family: ChosunGu;
+	font-size: 12px;
+	color: white;
+	text-align: center;
+}
+
+/* 작은 글씨 */
+.notice_font {
+	display: inline-block;
+	vertical-align: baseline;
+	font-size: 13px;
+	font-family: 'ChosunGu';
+	font-color: #daa35b;
+}
+
+/* 챌린지 정보 테이블 */
+table {
+	border: 1px solid #ebd39f;
+	font-size: 12pt;
+	font-family: 'ChosunGu';
+	vertical-align: top;
+	margin: auto;
+	padding: 5px;
+	text-algin: center;
+}
+
+/* 하단 form */
+.confirmForm {
+	text-align: center;
+}
+
+/* 등록 버튼 */
+.submit_btn {
+	width: 220px;
+	height: 30px;
+	background-color: #daa35b;
+	border: none;
+	border-radius: 4px;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 18px;
+	margin: 4px;
+	cursor: pointer;
+	font-family: 'ChosunGu';
+}
+
+.submit_btn:hover {
+	color: black;
+}

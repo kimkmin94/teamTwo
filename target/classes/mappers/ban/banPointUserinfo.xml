@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="byPointUserinfo">
+
+	<select id="byPointUser" resultType="byPointUserinfo">
+		<![CDATA[
+	
+	select * from (select rownum, a.*
+                       from (select p.POINT_TIMESTAMP, p.user_id_email, p.point_balance, u.user_nickname, u.user_image, u.user_regdate, u.user_intro
+                             from point p, user_info u, ( SELECT  p.user_id_email,MAX(p.POINT_TIMESTAMP) POINT_TIMESTAMP FROM  point p GROUP BY  user_id_email ) p2   
+                             where p.user_id_email = u.user_id_email
+                             and   p.user_id_email = p2.user_id_email
+                             and   p.POINT_TIMESTAMP = p2.POINT_TIMESTAMP
+                             order by point_balance desc, user_regdate ASC) a )
+      where rownum < 11
+	
+	
+		]]>
+	</select>
+
+
+</mapper>

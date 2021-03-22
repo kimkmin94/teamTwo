@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.teamTwo.dh.dao.dhUserDao">
+	<!-- 카테고리 질문 가져오기 -->
+	<select id="dhchatList" resultType="Chat_category">
+		select * from chat_category order by a_cnum
+	</select>
+	<!-- 카테고리 질문 넣기 -->
+	<insert id="dhinterst" parameterType="Interest_category">
+		insert into interest_category values(#{user_id_email},#{q_cnum},#{a_cnum})
+	</insert>
+	<!--카테고리 질문 내용 가져오기  -->
+	<select id="dhsubject" parameterType="Chat_category" resultType="java.lang.String">
+		select chat_subject from chat_category where q_cnum = #{q_cnum} and a_cnum = #{a_cnum}
+	</select>
+	<!-- 질문에 맞는 챌린지 리스트 가져오기 -->
+	<select id="dhuchatList3" parameterType="java.lang.String" resultType="Challenge">
+		SELECT * from(
+		      SELECT * FROM challenge
+		      WHERE chg_num
+		      IN (
+		          SELECT chg_num
+		          FROM (
+		                SELECT chg_num , count(chg_num) 
+		                FROM chg_chat_category
+		                WHERE (q_cnum, a_cnum)  IN(SELECT q_cnum , a_cnum
+		                                        FROM INTEREST_CATEGORY
+		                                        WHERE user_id_email = #{user_id_email} )
+		                GROUP BY chg_num
+		                HAVING count(chg_num) = 3
+		              )
+		          )
+		      AND chg_master != #{user_id_email}
+		      AND chg_state = 1
+		      ORDER BY DBMS_RANDOM.RANDOM)
+		 <![CDATA[where ROWNUM <= 3]]>
+	</select>
+	<!-- 질문 변경 -->
+	<update id="dhinter_update1" parameterType="dhInter">
+		update interest_category set a_cnum = #{a_cnum1} where user_id_email = #{user_id_email} and q_cnum = 1
+	</update>
+	<update id="dhinter_update2" parameterType="dhInter">
+		update interest_category set a_cnum = #{a_cnum2} where user_id_email = #{user_id_email} and q_cnum = 2
+	</update>
+	<update id="dhinter_update3" parameterType="dhInter">
+		update interest_category set a_cnum = #{a_cnum3} where user_id_email = #{user_id_email} and q_cnum = 3
+	</update>
+	<!--챗봇 1,2,3번 질문 답-->
+	<select id="dhinterNum1" parameterType="java.lang.String" resultType="int">
+		select a_cnum from interest_category where q_cnum = 1 and user_id_email = #{user_id_email}
+	</select>
+	<select id="dhinterNum2" parameterType="java.lang.String" resultType="int">
+		select a_cnum from interest_category where q_cnum = 2 and user_id_email = #{user_id_email}
+	</select>
+	<select id="dhinterNum3" parameterType="java.lang.String" resultType="int">
+		select a_cnum from interest_category where q_cnum = 3 and user_id_email = #{user_id_email}
+	</select>
+</mapper>

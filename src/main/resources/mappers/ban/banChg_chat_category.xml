@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Chg_chat_category">
+
+
+	<insert id="byregisterChatCate" parameterType="Chg_chat_category">
+		<selectKey keyProperty="chg_num" resultType="int"
+		 order="BEFORE">
+		 select challenge_seq.currval from dual
+		 </selectKey>
+
+		insert into chg_chat_category
+		(chg_num, q_cnum, a_cnum)
+		
+		values (
+		#{chg_num}, #{q_cnum}, #{a_cnum}
+		)
+	</insert>
+
+</mapper>

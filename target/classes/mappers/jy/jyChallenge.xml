@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.teamTwo.jy.dao.JyChallengeDao">
+
+	<!-- 챌린지 모집상태 -->
+	<select id="jychg_state" parameterType="int" resultType="int">
+		select chg_state from challenge where chg_num = #{chg_num}
+	</select>
+
+	<!-- 해당 챌린지 상세페이지 전체 내역 조회 -->
+	<select id="jychall" parameterType="int" resultType="Challenge">
+		select * from challenge where chg_num = #{chg_num}
+	</select>
+
+	<!-- 해시태그 -->
+	<select id="jyht2" parameterType="int" resultType="Hashtag2">
+		select rownum rn, hashtag_text
+		from challenge c, hashtag h, hashtag2 t
+		where c.chg_num	= h.chg_num and h.hashtag_num = t.hashtag_num and c.chg_num = #{chg_num}
+		order by h.hashtag_num
+	</select>
+
+	<!-- 챌린지 마스터 유저 사진, 닉네임 -->
+	<select id="jymaster" parameterType="int" resultType="User_info">
+		select user_image, user_nickname, user_id_email
+		from user_info
+		where user_id_email = (select chg_master
+                       		   from challenge
+                               where chg_num = #{chg_num}) 
+	</select>
+
+	<!-- 챌린지 참여자 수 조회 -->
+	<select id="jytotpart" resultType="int">
+		select count(*) from
+		part_challenge where chg_num = #{chg_num}
+	</select>
+	
+	<!-- 현재 참여자 업데이트 -->
+	<update id="jyInsertTot" parameterType="HashMap">
+	 update challenge set chg_now_parti = #{totpart} where chg_num  = #{chg_num}
+	</update>
+
+	<!-- 챌린지 참여자 유저 사진, 닉네임 -->
+	<select id="jyuser" parameterType="int"	resultType="User_info">
+		select user_image, user_nickname, u.user_id_email
+		from challenge c, part_challenge p, user_info u
+		where c.chg_num = p.chg_num and p.user_id_email =u.user_id_email and c.chg_num = #{chg_num}
+	</select>
+	
+	<!-- 로그인 유저 현재 보유포인트 -->
+	<select id="jyPoint" parameterType="java.lang.String" resultType="int">
+		select max(point_balance) keep (dense_rank last order by point_timestamp) a from point
+		where USER_ID_EMAIL = #{id}
+	</select>
+
+	<!-- 챌린지 참여여부 -->
+	<select id="jyCheckState" resultType="int">
+		select count(*)
+		from part_challenge
+		where USER_ID_EMAIL = #{user_id_email} and chg_num = #{chg_num}
+	</select>
+	
+	<!-- 배팅 포인트 넣기 -->
+	<insert id="jyinsertPoint" parameterType="Point">
+		insert into point(user_id_email,point_minus,point_balance,point_timestamp,chg_num,point_memo)
+      values(#{user_id_email},#{point_minus},#{point_balance}-#{point_minus},systimestamp,#{chg_num},'챌린지 배팅 포인트')
+	</insert>
+	
+	<!-- Part 테이블에 참가자 넣기 -->
+	<insert id="jyinsertPart" parameterType="Part_challenge">
+      insert into part_challenge values(#{user_id_email},#{chg_num},#{batting_point},#{chg_days},0)
+	</insert>
+	
+	<!-- 인증사진 및 데이터 업데이트 -->
+	<insert id="jyChg_photochk" parameterType="Chg_photochk">
+		insert into chg_photochk values(#{chg_num}, #{parti_id_email}, systimestamp, 0, #{confirm_image}, (chg_photochk_seq.nextval))
+	</insert>
+
+	<!-- 인증사진리스트 -->
+	<select id="jyPhoto_Chk" parameterType="HashMap" resultType="JyChg_photochk">
+		select chg_num, parti_id_email, to_char(upload_timestamp, 'yyyy-mm-dd hh24:mi:ss') upload_timestamp, confirm_state, confirm_image, user_nickname, user_image, photochk_num
+		from(select rownum rn, a.*
+	         from(select *
+		          from(select c.chg_num, c.parti_id_email, c.upload_timestamp, c.confirm_state, c.confirm_image, c.photochk_num, u.user_nickname, u.user_image
+		                from chg_photochk c , user_info u
+                  where c.parti_id_email = u.user_id_email)
+	         where chg_num =#{chg_num}
+	         order by upload_timestamp desc)a)
+		where rn between #{start} and #{end}
+	</select>
+	
+	<!-- 인증사진리스트 갯수 -->
+	<select id="jytotPhoto" parameterType="int" resultType="int">
+	 	select count(*) from chg_photochk where chg_num = #{chg_num}
+	</select>
+	
+	<!-- 인증사진컨펌 승인/거절 업데이트 -->
+	<update id="jyPhotoConfirm" parameterType="Chg_photochk">
+		update chg_photochk set confirm_state = #{confirm_state} where photochk_num = #{photochk_num}
+	</update>
+	
+	<!-- 인증사진컨펌 카운트 -->
+	<update id="jyConfirm_Count" parameterType="CheckMyState">
+	update PART_CHALLENGE set confirm_count =  confirm_count + 1 where chg_num = #{chg_num} and user_id_email = #{user_id_email}
+	</update>
+	
+	<!-- 오늘인증했는지 카운트 -->
+	<select id="jyTodayCnt" parameterType="JyChg_photochk" resultType="int">
+	select count(*)
+    from (select chg_num, to_char(upload_timestamp, 'yyyy-mm-dd') upload_timestamp, parti_id_email
+          from chg_photochk
+          where parti_id_email = #{parti_id_email} and chg_num=#{chg_num})
+    where upload_timestamp = #{today}
+	</select>
+
+	<!-- 경민 소통하기 -->
+	<select id="kmchgChatShow" parameterType="int" resultType="kmChgChatBox">
+		select ui.user_id_email, ui.user_image, ui.user_nickname, ui.user_state,
+		cc.chat_contents, cc.chat_timestamp, cc.chat_id_email, cc.chg_num, cc.chat_num
+		from chg_chat cc, user_info ui
+		where chg_num = #{chg_num}
+		and cc.chat_id_email = ui.user_id_email
+		order by chat_timestamp
+	</select>
+	
+	<!-- 경민 채팅인서트 -->
+	<insert id="kmchgChatInsert">
+		insert into chg_chat values((chat_num_seq.nextval), #{chg_num}, #{chat_id_email}, sysdate, #{chat_contents}) 
+	</insert>
+
+	<!-- 경민 후기 -->
+	<select id="kmchgReviewShow" resultType="kmChgReviewBox">
+		select ui.user_id_email, ui.user_image, ui.user_nickname, ui.user_state,
+		cr.review_contents, cr.review_timestamp, cr.chg_num, cr.review_score
+		from chg_review cr, user_info ui
+		where chg_num = #{chg_num}
+		and cr.user_id_email = ui.user_id_email
+		order by review_timestamp
+	</select>
+	
+	<!-- 경민 후기 업데이트 -->
+	<insert id="kmReviewUpdate">
+		insert into chg_review values(#{chg_num}, #{user_id_email},
+		#{review_contents}, #{review_score}, sysdate)
+	</insert>
+	
+   <!-- 경민 도토리바 -->
+   <select id="kmChkBar" resultType="int">
+      select count(*) from part_challenge where chg_num = #{chg_num}
+      and user_id_email = #{user_id_email}
+   </select>
+   <select id="kmMyChgBar" resultType="Part_challenge">
+      select * from part_challenge where chg_num = #{chg_num}
+      and user_id_email = #{user_id_email}
+   </select>
+   
+   
+   <!-- 경민 랜덤문구1 -->
+   <select id="kmSelectTodayRecord" resultType="Random_phrase">
+      select today_record from random_phrase where phrase_num = 0
+   </select>
+   
+   <!-- 경민 랜덤문구2 -->
+   <select id="kmSelectPhrase" resultType = "String">
+      select phrase_contents from random_phrase where phrase_num = #{num}
+   </select>
+   
+   <!-- 경민 랜덤문구3 -->
+   <select id="kmSelectMaxNum" resultType = "int">
+      select max(phrase_num) from random_phrase 
+   </select>
+   
+   <!-- 경민 랜덤문구4 -->
+   <select id="kmRandomNum" resultType = "int">
+      select round(dbms_random.value(1,#{maxNum}),0) from dual
+   </select>
+   
+   <!-- 경민 랜덤문구5 -->
+   <update id="kmUpdatePhrase" >
+      update random_phrase set phrase_contents=#{today_phrase}, today_record = sysdate where phrase_num =0
+   </update>
+   
+   <!-- 경민 소통하기 , 후기 카운트 -->
+   <select id="kmCountChat" resultType = "int">
+   		select count(*) from chg_chat where chg_num = #{chg_num}
+   </select>
+   <select id="kmCountReview" resultType = "int">
+   		select count(*) from chg_review where chg_num = #{chg_num}
+   </select>
+   <select id="kmCountMyReview" resultType = "int">
+   		select count(*) from chg_review where chg_num = #{chg_num} and user_id_email = #{user_id_email}
+   </select>
+</mapper>

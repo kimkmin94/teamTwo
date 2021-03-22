@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="community" >
+	<select id="hjtotal" resultType="int">
+		select count(*)
+		from community
+		where b_state = 1
+	</select>
+	<select id="hjlistAll" resultType="Community" parameterType="Community">
+		select b.*,m.* from (select rownum rn, a.* 
+	           from (select * from community   where  b_state = 1 order by b_num desc) a ) b , CMU_CATEGORY m
+	    where rn between #{start} and  #{end}  
+	    And b.b_c_num = m.b_c_num
+	    order by b_num desc
+		
+	</select>
+	<select id="hjtotalnav" resultType="int" parameterType="int">
+		select count(*)
+		from community
+		where b_state = 1
+		And b_c_num = #{b_c_num}
+		
+	</select>
+	<select id="hjlistnav" resultType="Community" parameterType="Community">
+		select b.*,m.* from (select rownum rn, a.* 
+	           from (select * from community   where  b_state = 1  and b_c_num  = #{b_c_num} order by b_num desc) a ) b , CMU_CATEGORY m
+	    where rn between #{start} and  #{end}  
+	    And b.b_c_num = m.b_c_num
+		order by b_num desc
+	</select>
+
+	<insert id="hjInsert" parameterType="Community" useGeneratedKeys="true">
+		<selectKey keyProperty="b_num" resultType="int" order="BEFORE" >
+			select b_num_seq.nextval from dual
+		</selectKey>
+			insert into community
+			values(#{b_num},#{b_c_num},#{b_id_email},#{b_nickname},#{b_title},#{b_contents},#{b_image},sysdate,0,0,1)
+	</insert>
+	<select id="hjCom" parameterType="int" resultType="Community">
+		select c.*, m.*,u.USER_IMAGE
+		from community c , CMU_CATEGORY m ,USER_INFO u
+		where c.b_c_num = m.b_c_num
+   		And c.B_ID_EMAIL = u.USER_ID_EMAIL
+   		And c.b_num = #{b_num}
+	</select>
+<!--총 댓글 개수 가져오기(대댓글 포함)  -->
+	<select id="hjtotalReply" parameterType="int" resultType="int">
+		select count(*)
+		from CMU_REPLY
+		where b_num = #{b_num}
+		And RE_STATE = 1
+	</select>
+<!--게시글의 댓글 가져오기  -->
+	<select id="hjfindRe" parameterType="int" resultType="Cmu_reply">
+	    select c.*,u.USER_IMAGE,u.USER_NICKNAME
+			from cmu_reply c,USER_INFO u
+	    where c.RE_WRITER = u.USER_ID_EMAIL
+		And b_num = #{b_num}
+		And RE_STATE = 1
+		order by re_no desc
+	</select>
+<!--게시글 조회수 +1 하기  -->
+	<update id="hjupdateDetail" parameterType="int">
+		update community
+		set b_view_count = b_view_count+1
+		where b_num = #{b_num}
+	</update>
+
+	
+<!--댓글 수정 로직  -->
+	<update id="hjupdateRe" parameterType="Cmu_reply">
+		update cmu_reply
+		set re_contents = #{re_contents}
+		where re_no = #{re_no}
+	</update>
+<!--게시물과 댓글의 상태를 -1로 변환해서 삭제한것처럼   -->
+	<update id="hjdeleteCmu" parameterType="int">
+		update COMMUNITY
+		set b_state = -1
+		where b_num = #{b_num} 
+	</update>
+	<update id="hjdeleteRep" parameterType="int">
+		update CMU_REPLY
+		set re_state = -1
+		where b_num =  #{b_num} 
+	</update>
+
+<!--댓글 insert sql  -->
+<insert id="hjreply_insert" useGeneratedKeys="true" parameterType="Cmu_reply">
+		<selectKey keyProperty="re_no" resultType="int" order="BEFORE">
+			select RE_NO_SEQ.nextval from dual
+		</selectKey>
+			insert into cmu_reply
+			values(#{b_num},#{re_no},1,1,#{re_contents},#{re_writer},sysdate,1)
+	</insert>	
+<!--게시글 수정 후 업데이트  -->	
+	<update id="hjupdateWrite" parameterType="Community">
+		update Community
+		set b_title = #{b_title},b_contents= #{b_contents},b_image= #{b_image}
+		where b_num = #{b_num}
+	</update>
+<!--게시글 좋아요 수 +1  -->
+	<update id="hjUpdateLike" parameterType="int">
+		update Community
+		set b_like_count = b_like_count+1
+		where b_num = #{b_num}
+	</update>
+	<select id="hjSelectLike" parameterType="int" resultType="String">
+		select b_like_count
+		from Community
+		where b_num = #{b_num}
+	</select>
+<!--댓글 달았을 때 최근포인트  -->
+	<select id="hjFindPoint" parameterType="String" resultType="int">
+      select max(point_balance) keep (dense_rank last order by point_timestamp) a from point
+      where user_id_email = #{user_id_email}
+	</select>
+<!-- 댓글 열매 부여 -->
+	<insert id="hjAddPoint" parameterType="Point">
+		insert into point(user_id_email,point_plus,point_balance,point_timestamp,point_memo)
+		values(#{user_id_email},5,#{point_balance}+5,sysdate,'댓글작성열매')	
+	</insert>	
+<!--검색엔진-검색하기  -->	
+	<select id="hjSearch" resultType="Community" parameterType="Community">
+		select b.*,m.* from (select rownum rn, a.* 
+	           from (select * from community   where  b_state = 1 order by b_num desc) a ) b , CMU_CATEGORY m	    where rn between #{start} and  #{end}
+	    And  b.b_c_num = m.b_c_num
+	    And  ${search}  LIKE '%'||#{keyword}||'%' 
+		And  b_state = 1
+	</select>
+	<select id="hjTotalSearch" resultType="int" parameterType="Community">
+		select 	 count(*)
+		from  	 Community
+		Where   b_state = 1
+		And	 ${search} like '%'||#{keyword}||'%'
+	</select>
+<!--댓글 삭제 시 댓글 상태 변화  -->
+	<update id="hjdeleteReply" parameterType="int" >
+		update Cmu_reply
+		set RE_STATE = -1
+		where re_no = #{re_no}
+	</update>
+<!--댓글 수정시  -->	
+	<update id="hjupdateReply" parameterType="Cmu_reply" >
+		update Cmu_reply
+		set re_contents = #{re_contents}, re_date = sysdate
+		where re_no = #{re_no}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

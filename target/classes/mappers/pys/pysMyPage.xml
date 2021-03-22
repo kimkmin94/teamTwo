@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.teamTwo.pys.dao.MyPageDao">
+
+   <select id="pysUserList" parameterType="String" resultType="User_info" >
+      SELECT * from user_info where user_id_email = #{user_id_email}
+   </select>
+   
+   <select id="pysUserfollower" parameterType="String" resultType="String" >
+      SELECT COUNT(*) FROM follower WHERE user_id_email = #{user_id_email}
+   </select>
+   
+   <select id="pysUserfollowing" parameterType="String" resultType="String" >
+      SELECT COUNT(*) FROM following WHERE user_id_email = #{user_id_email}
+   </select>
+   
+   <select id="pysCalendar" parameterType="String" resultType="Challenge" >
+      SELECT c.chg_title, c.chg_num, c.chg_startdate, c.chg_enddate, c.chg_image FROM challenge c, (SELECT chg_num FROM part_challenge WHERE user_id_email = #{user_id_email}) s where c.chg_num = s.chg_num AND NOT c.chg_state = 5
+   </select>
+   
+   <select id="pysCalendar_master" parameterType="String" resultType="Challenge" >
+      SELECT c.chg_title, c.chg_num, c.chg_startdate, c.chg_enddate, c.chg_image FROM challenge c where chg_master = #{user_id_email} and NOT c.chg_state = 5
+   </select>
+   
+   <select id="pysUserpoint" parameterType="String" resultType="String" >
+      SELECT point_balance FROM point where user_id_email= #{user_id_email}
+   </select>
+   
+   <select id="pysUserch_success" parameterType="String" resultType="String" >
+      SELECT COUNT(*) FROM part_challenge WHERE user_id_email = #{user_id_email} AND chg_days = confirm_count
+   </select>
+   
+   <select id="pysUserch_progress" parameterType="String" resultType="String" >
+      SELECT
+          COUNT(*)
+      FROM
+          part_challenge p, challenge c
+      WHERE
+          p.user_id_email = #{user_id_email}
+      AND
+          p.chg_num = c.chg_num
+      AND
+          TO_CHAR(c.chg_enddate, 'YY/MM/DD') > TO_CHAR(SYSDATE, 'YY/MM/DD')
+   </select>
+   
+   <select id="pysUserch_fail" parameterType="String" resultType="String" >
+   SELECT
+       COUNT(*)
+   FROM
+       part_challenge p, challenge c
+   WHERE
+       p.user_id_email = #{user_id_email}
+   AND
+       p.chg_num = c.chg_num
+   AND NOT
+       chg_days = confirm_count
+   AND
+       <![CDATA[
+       TO_CHAR(c.chg_enddate, 'YY/MM/DD') < TO_CHAR(SYSDATE, 'YY/MM/DD')
+       ]]>
+   </select>
+   
+   <insert id="pysFollowing_insert" parameterType="Following" >
+      INSERT INTO following(user_id_email, user_following) VALUES (#{user_id_email}, #{user_following})
+   </insert>
+   
+   <insert id="pysFollower_insert" parameterType="Follower" >
+      INSERT INTO follower(user_id_email, user_follower) VALUES (#{user_id_email}, #{user_follower})
+   </insert>
+   
+   <select id="pysfollow_Did" parameterType="Following" resultType="String">
+      SELECT COUNT(*) FROM following WHERE user_id_email = #{user_id_email} and user_following = #{user_following}
+   </select>
+   
+   <delete id="pysFollower_del" parameterType="Follower"  >
+      DELETE FROM follower WHERE user_id_email = #{user_follower} AND user_follower = #{user_id_email}
+   </delete>
+   
+   <delete id="pysFollowing_del" parameterType="Following">
+      DELETE FROM following WHERE user_id_email = #{user_id_email} AND user_following = #{user_following}
+   </delete>
+   
+   <select id="pysfollower_list" parameterType="String" resultType="User_info">
+   SELECT
+      u.user_id_email, u.user_nickname, u.user_image, u.user_regdate, u.user_intro,
+   CASE
+       WHEN a.user_id_email = b.user_id_email THEN 'YES'
+       END as haeseum
+   FROM
+      (SELECT * FROM follower WHERE user_id_email = #{user_id_email}) a,
+      (SELECT * FROM following WHERE user_id_email = #{user_id_email}) b,
+      user_info u
+   WHERE
+   a.user_follower = b.user_following(+)
+      AND
+      u.user_id_email = a.user_follower
+   </select>
+   
+   <select id="pysfollowing_list" parameterType="String" resultType="User_info">
+      select u.user_id_email, u.user_nickname, u.user_image, u.user_regdate, u.user_intro from following f, user_info u where f.user_id_email =#{page_id_email} and f.user_following = u.user_id_email
+   </select>
+   
+   <select id="pyspoint_list" parameterType="String" resultType="Point">
+      select p.point_balance, i.user_id_email, i.point_plus, i.point_minus, i.point_timestamp, i.point_memo from (select max(point_balance) keep (dense_rank last order by point_timestamp) point_balance from point
+      where USER_ID_EMAIL =  #{user_id_email}) p, point i WHERE user_id_email =  #{user_id_email} ORDER BY i.point_timestamp DESC
+      </select>
+   
+   <select id="pysFollowing_haeseum123" parameterType="Following" resultType="String">
+      SELECT count(*) FROM
+      (SELECT * FROM following
+      WHERE
+      user_id_email=#{user_id_email} and user_following =#{user_following}) a,
+      (SELECT * FROM following WHERE user_id_email=#{user_following} and user_following =#{user_id_email}) b
+      WHERE
+      a.user_id_email = b.user_following
+      AND b.user_id_email = a.user_following
+   </select>
+   
+   <select id="pysFollower_haeseum" parameterType="String" resultType="String">
+
+   </select>
+   
+   <select id="follower_search" parameterType="Follower" resultType="User_info">
+   SELECT u.user_id_email, u.user_nickname, u.user_image, u.user_intro, u.user_nickname
+   FROM follower f, user_info u WHERE f.user_id_email = #{user_id_email}
+   AND u.user_nickname LIKE '%'||#{user_follower}||'%'
+   AND f.user_follower = u.user_id_email
+   </select>
+   
+   <select id="following_search" parameterType="Follower" resultType="User_info">
+   SELECT u.user_id_email, u.user_nickname, u.user_image, u.user_intro, u.user_nickname
+   FROM following f, user_info u WHERE f.user_id_email = #{user_id_email}
+   AND u.user_nickname LIKE '%'||#{user_following}||'%'
+   AND f.user_following = u.user_id_email
+   </select>
+   
+   
+   
+   
+   <select id="dhtotal" parameterType="java.lang.String" resultType="int">
+      select count(*) from point where user_id_email = #{user_id_email}
+   </select>
+   
+   <select id="dhpoint_list" parameterType="dhPagePoint" resultType="dhPagePoint">
+      select * from (select rownum rn, a.* 
+                     from (select * from point where user_id_email=#{user_id_email} order by point_timestamp desc) a
+                     ) 
+      where rn between #{start} and #{end}  
+   </select>
+   
+   <select id="dhmypoint" parameterType="java.lang.String" resultType="int">
+      select max(point_balance) keep (dense_rank last order by point_timestamp) a from point
+      where USER_ID_EMAIL = #{user_id_email}
+   </select>
+   
+   
+   
+   <select id="follow_page_me" parameterType="Follower" resultType="String">
+      SELECT COUNT(*) FROM follower WHERE user_follower=#{user_follower} AND user_id_email=#{user_id_email}
+   </select>
+   
+   <select id="follwer_challenge" parameterType="Following" resultType="Part_challenge">
+      SELECT
+      a.user_id_email , u.user_nickname , u.user_image , b.chg_num, b.chg_title, b.chg_image
+          FROM
+          (SELECT
+          *
+          FROM
+          part_challenge
+          WHERE
+          <foreach collection="list" item="item" separator="or">
+            user_id_email = #{item.user_id_email}
+           </foreach>
+          ) a,
+          (SELECT
+          *
+          FROM
+          challenge
+          WHERE
+          <![CDATA[
+          TO_CHAR(chg_startdate, 'YY/MM/DD') < TO_CHAR(SYSDATE, 'YY/MM/DD')
+          ]]>
+          AND
+          TO_CHAR(chg_enddate, 'YY/MM/DD') > TO_CHAR(SYSDATE, 'YY/MM/DD')) b,
+          user_info u
+      WHERE
+      a.chg_num = b.chg_num
+      AND
+      a.user_id_email = u.user_id_email
+   </select>
+   
+   <select id="follwer_challenge_master" parameterType="Following" resultType="Part_challenge">
+      SELECT
+         a.user_id_email , u.user_nickname , u.user_image , b.chg_num, b.chg_title, b.chg_image
+             FROM
+             (SELECT
+             *
+             FROM
+             part_challenge
+             WHERE
+              <foreach collection="list" item="item" separator="or">
+               user_id_email = #{item.user_id_email}
+              </foreach>
+             ) a,
+             (SELECT
+             *
+             FROM
+             challenge
+             WHERE
+              <![CDATA[
+             TO_CHAR(chg_regdate, 'YY/MM/DD') < TO_CHAR(SYSDATE, 'YY/MM/DD')
+             AND
+             TO_CHAR(SYSDATE, 'YY/MM/DD') < TO_CHAR(chg_startdate-1, 'YY/MM/DD')) b,
+             ]]>
+             user_info u
+         WHERE
+         a.chg_num = b.chg_num
+         AND
+         a.user_id_email = u.user_id_email
+   </select>
+   
+</mapper>

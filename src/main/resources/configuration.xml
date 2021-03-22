@@ -1,0 +1,69 @@
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- 작성 시에, 본인 공간에 작성 바람 -->
+<!-- 앞에 이니셜 불이기 -->
+
+<configuration>
+     <typeAliases>
+
+     <!-- 공용 시작 -->
+     <typeAlias alias="Challenge" type="com.oracle.teamTwo.teamtwo.model.Challenge"/>
+     <typeAlias alias="Chat_category" type="com.oracle.teamTwo.teamtwo.model.Chat_category"/>
+     <typeAlias alias="Chg_chat" type="com.oracle.teamTwo.teamtwo.model.Chg_chat"/>
+     <typeAlias alias="Chg_chat_category" type="com.oracle.teamTwo.teamtwo.model.Chg_chat_category"/>
+     <typeAlias alias="Chg_photochk" type="com.oracle.teamTwo.teamtwo.model.Chg_photochk"/>
+     <typeAlias alias="Chg_review" type="com.oracle.teamTwo.teamtwo.model.Chg_review"/>
+     <typeAlias alias="Cmu_category" type="com.oracle.teamTwo.teamtwo.model.Cmu_category"/>
+     <typeAlias alias="Cmu_reply" type="com.oracle.teamTwo.teamtwo.model.Cmu_reply"/>
+     <typeAlias alias="Community" type="com.oracle.teamTwo.teamtwo.model.Community"/>
+     <typeAlias alias="Follower" type="com.oracle.teamTwo.teamtwo.model.Follower"/>
+     <typeAlias alias="Following" type="com.oracle.teamTwo.teamtwo.model.Following"/>
+     <typeAlias alias="Hashtag" type="com.oracle.teamTwo.teamtwo.model.Hashtag"/>
+     <typeAlias alias="Hashtag2" type="com.oracle.teamTwo.teamtwo.model.Hashtag2"/>
+     <typeAlias alias="Interest_category" type="com.oracle.teamTwo.teamtwo.model.Interest_category"/>
+     <typeAlias alias="Like_chglist" type="com.oracle.teamTwo.teamtwo.model.Like_chglist"/>
+     <typeAlias alias="Main_category" type="com.oracle.teamTwo.teamtwo.model.Main_category"/>
+     <typeAlias alias="Oper_challenge" type="com.oracle.teamTwo.teamtwo.model.Oper_challenge"/>
+     <typeAlias alias="Part_challenge" type="com.oracle.teamTwo.teamtwo.model.Part_challenge"/>
+     <typeAlias alias="Point" type="com.oracle.teamTwo.teamtwo.model.Point"/>
+     <typeAlias alias="Random_phrase" type="com.oracle.teamTwo.teamtwo.model.Random_phrase"/>
+     <typeAlias alias="User_info" type="com.oracle.teamTwo.teamtwo.model.User_info"/>
+     <!-- 공용 끝 -->
+     
+     <!-- 김반야 님 시작 -->
+     <typeAlias alias="byPointUserinfo" type="com.oracle.teamTwo.ban.model.byPointUserinfo"/>
+     <!-- 김반야 님 끝 -->
+     
+     <!-- 도회 님 시작 -->
+       <typeAlias alias="dhInter" type="com.oracle.teamTwo.dh.model.Inter"/>
+ 	 <typeAlias alias="dhThisPoint" type="com.oracle.teamTwo.dh.model.ThisPoint"/>
+ 	 <typeAlias alias="dhPagePoint" type="com.oracle.teamTwo.pys.model.PagePoint"/>
+     <!-- 도회 님 끝 -->
+     
+     <!-- 윤홍주 님 시작 -->
+     
+     <!-- 윤홍주 님 끝 -->
+     
+     <!-- 김희수 님 시작 -->
+     
+     <!-- 김희수 님 끝 -->
+     
+     <!-- 지예 님 시작 -->
+     <typeAlias alias="JyChg_photochk" type="com.oracle.teamTwo.jy.model.JyChg_photochk"/>
+     <typeAlias alias="CheckMyState" type="com.oracle.teamTwo.jy.model.CheckMyState"/>
+     <!-- 지예 님 끝 -->
+     
+     <!-- 김경민 님 시작 -->
+ 	<typeAlias alias="kmChgChatBox" type="com.oracle.teamTwo.jy.model.ChgChatBox"/>
+	 <typeAlias alias="kmChgReviewBox" type="com.oracle.teamTwo.jy.model.ChgReviewBox"/><!-- 김경민 님 끝 -->
+     <!-- 박용수 님 시작 -->
+     
+     <!-- 박용수 님 끝 -->
+     
+     <!-- 송우재 님 시작 -->
+     <typeAlias alias="wjListPaging"  type="com.oracle.teamTwo.wj.model.ListPaging"/>
+     <typeAlias alias="wjPointUser_info"  type="com.oracle.teamTwo.wj.model.WJPointUser_info"/>
+     <!-- 송우재 님 끝 -->
+     
+     </typeAliases>
+</configuration>

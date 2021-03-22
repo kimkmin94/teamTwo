@@ -1,0 +1,480 @@
+@charset "UTF-8";
+
+
+@font-face {
+    font-family: 'JalnanOTF';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ChosunGu';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@media screen and (max-width: 1550px) {
+	body {
+		overflow-x : hidden; 
+	}
+}
+
+/* 기준 1600px */
+/* marign 자동으로 잡아주기 */
+.standard {
+	width: 1600px;
+	margin: 0 0 0 53.667px;
+}
+
+.profile {
+	width: 280px;
+	margin: 0 30px 0 30px;
+	
+	float: left;
+}
+
+.profile_img_3 {
+	width:230px;
+	height:230px;
+	border-radius: 50%;
+	
+	background-color: #f8d0a769;
+	box-shadow: inset 0 0 0px 11px #df8528;
+	
+	position: absolute;
+	top: -160px;
+	left: 18px;
+}
+
+.profile_img_2 {
+	width:226px; 
+	height:226px;
+	border-radius: 50%;
+	background-color: #f8d0a7;
+	
+	position: absolute;
+	margin: 2px 0 0 2px;
+}
+
+.profile_img_1 {
+	width:216px;
+	height:216px;
+	border-radius: 50%;
+	background-color: white;
+	
+	position: absolute;
+	margin: 5px 0 0 5px;
+}
+
+.profile_text_3 {
+	width: 280px;
+	height: 460px;
+	
+	background-color: #f8d0a769;
+	box-shadow: inset 0 0 0px 11px #df8528;
+	
+	margin: 180px 0 0 0;
+}
+
+.profile_text_2 {
+	width: 276px;
+	height: 456px;
+	background-color: #f8d0a7;
+	position: absolute;
+	margin: 2px 0 0 2px;
+}
+
+.profile_text_1 {
+	width: 266px;
+	height: 446px;
+	background-color: white;
+	position: absolute;
+	margin: 5px 0 0 5px;
+	
+	text-align: center;
+	font-family: JalnanOTF;
+	font-size: 35px;
+}
+
+.profile_whiteSpace_1 {
+	width: 266px;
+	height: 70px;
+}
+
+.profile_Onelineintroduction {
+	font-family: ChosunGu;
+	font-size: 15px;
+}
+
+.edit_OR_follow {
+	width:100px; 
+	border-radius: 50px;
+	background-color: #7E715B;
+	
+	padding: 7px 0 7px 0;
+	margin: 30px 0 0 0;
+	
+	border: 0;
+	outline: 0;
+	
+	color: white;	
+	font-family: ChosunGu;
+	font-size: 15px;
+	
+	cursor:pointer;
+}
+
+.followers_following_num {
+	width:150px; 
+	
+	border: 2.5px solid #C55A11;
+	border-radius: 50px;
+	background-color: white;
+	
+	margin: 10px 0 0 55px;
+	
+	text-align: center;
+	font-family: JalnanOTF;
+	font-size: 30px;
+}
+
+.followers_following {
+	width:75px; 
+	
+	border: 2.5px solid #C55A11;
+	border-radius: 50px;
+	background-color: #C55A11;
+	
+	margin: 0 0 0 60px;
+	
+	outline: 0;
+	
+	color: white;	
+	font-family: ChosunGu;
+	font-size: 15px;
+	
+	cursor:pointer;
+}
+
+.main {
+	margin: 0 30px 30px 30px;
+	width: 1091px;
+	
+	float: left;
+}
+
+.calendar {
+	overflow: hidden;
+	
+	height: auto;
+	width: auto;
+	
+	margin: 40px 0 0 0;
+	padding: 30px 10px 30px 10px;
+	
+	background-color: #F8D0A7;
+	box-shadow: inset 0 0 0px 4px #e6b685d1;
+	
+	float: left;
+}
+
+.calendar_month {
+	width: 220px;
+	
+	padding: 8px 0 6px 0;
+	margin: 0 35px 0 15px;
+	border-radius: 15px;
+	
+	color: white;
+	background-color: #7E715B;
+	box-shadow: inset 0 0 0px 4px #5d5344;
+	
+	text-align: center;
+	font-family: JalnanOTF;
+	font-size: 25px;
+	
+	float: left;
+}
+
+.calendar_day {
+	padding: 6px 20px 6px 20px;
+	margin: 8px 8px 15px 8px;
+	border-radius: 15px;
+	
+	background-color: white;
+	box-shadow: 0 0 0px 4px #d38c218f;
+	
+	text-align: center;
+	font-family: ChosunGu;
+	font-size: 15px;
+	
+	float: left;
+}
+
+.calendar_bar {
+	width: 100px;
+	height: 25px;
+	border-radius: 5px;
+	
+	overflow: hidden;
+	
+	background-color: #916657;
+	
+	position: relative;
+	top: -4px;
+	
+	float: left;
+}
+
+.calendar_ToDo {
+	width: 220px;
+	
+	padding: 12.4px 0 12.5px 0;
+	margin: 10px 27px 0 15px;
+	border-radius: 15px;
+	
+	background-color: white;
+	
+	text-align: center;
+	font-family: ChosunGu;
+	font-size: 15px;
+	
+	float: left;
+}
+
+.calendar_ToDo_dotori {
+	width: 35px;
+	
+	position: relative;
+	left: -23px;
+	top: -12px;
+	
+	float: left;
+}
+
+.calendar_ToDoDay {
+	width: 774.466;
+	height: 14.667px;
+	
+	padding: 12.5px 0 12.5px 0;
+	margin: 10px 10px 0 10px;
+	border-radius: 15px;
+	
+	background-color: white;
+	
+	text-align: center;
+	font-family: ChosunGu;
+	font-size: 15px;
+
+	overflow: hidden;	
+	float: left;
+}
+
+.point {
+	width: 500px;
+	height: 300px;
+	margin: 30px 15px 0 0;
+	
+	background-color: white;
+	box-shadow: inset 0 0 0px 4px #d38c218f;
+	border-radius: 25px;
+	
+	font-family: JalnanOTF;
+	font-size: 40px;
+	
+	float: left;
+}
+
+.point_in {
+	width: 460px;
+	height: 260px;
+	
+	margin: 20px 20px 20px 20px;
+}
+
+.dotori {
+	width: 40px;
+}
+
+.chart {
+	width: 561px;
+	height: 300px;
+	margin: 30px 0 0 15px;
+	
+	background-color: white;
+	box-shadow: inset 0 0 0px 4px #d38c218f;
+	border-radius: 25px;
+	
+	float: left;
+}
+
+.chart_in {
+	width: 518px;
+	height: 260px;
+	
+	margin: 20px 20px 20px 20px;
+}
+
+.chart_circle {
+	width:230px;
+	height:230px;
+	border-radius: 50%;
+	
+	margin: 15px 15px 15px 15px;
+	
+	float: left;
+}
+
+.chart_text1 {
+	width: 11px;
+	height: 11px;
+	background-color: #C55A11;
+	
+	box-shadow: inset 0 0 2px 2px white, 0 0 1px 1px #00000036;
+	
+	float: left;
+	position: relative;
+	top: 4.5px;
+}
+
+.chart_text2 {
+	width: 11px;
+	height: 11px;
+	background-color: #F8CBAD;
+	
+	box-shadow: inset 0 0 2px 2px white, 0 0 1px 1px #00000036;
+	
+	float: left;
+	position: relative;
+	top: 4.5px;
+}
+
+.chart_text3 {
+	width: 11px;
+	height: 11px;
+	background-color: #7E715B;
+	
+	box-shadow: inset 0 0 2px 2px white, 0 0 1px 1px #00000036;
+	
+	float: left;
+	position: relative;
+	top: 4.5px;
+}
+
+.timeline {
+	width: 100%;
+	
+	margin: 30px 0 0 0;
+	
+	background-color: #F8D0A7;
+	box-shadow: inset 0 0 0px 4px #e6b685d1;
+	border-radius: 15px;
+	
+	float: left;
+	
+}
+
+.timeline_in {
+	overflow: hidden;
+	height: auto;
+	width: 1091px;
+	
+	margin: 20px 20px 20px 20px;
+}
+
+.timeline_now {
+	width:1051px;
+	
+	text-align: center;
+	font-family: JalnanOTF;
+	font-size: 25px;
+	
+	background-color: #7E715B;
+	box-shadow: inset 0 0 0px 4px #5d5344;
+	border-radius: 15px;
+	
+	margin: 0 0 20px 0;
+	padding: 10px 0 10px 0;
+}
+
+.timeline_check {
+	width:250px;
+	height:300px;
+	
+	margin: 6px 6px 6px 6px;
+	
+	background-color: white;
+	box-shadow: inset 0 0 0px 1.5px #df8528;
+	border-radius: 15px;
+	
+	float: left;
+}
+
+.timeline_how {
+	width: 230px;
+	padding: 10px 0 10px 0;
+	
+	font-family: ChosunGu;
+	font-size: 15px;
+	text-align: center;
+	
+	box-shadow: inset 0 0 0px 2px #df8528;
+	border-radius: 15px;
+	
+	margin: 10px 10px 10px 10px;
+}
+
+.timeline_img {
+	width: 230px;
+	height: 230px;
+	
+	background-repeat: no-repeat;
+	background-position: center;
+	
+	margin: 10px 10px 10px 10px;
+}
+
+.follow_yes_button {
+	width: 500px;
+	height: 75px;
+	
+	color: white;
+	
+	box-shadow: inset 0px -4px 0px 0px #723811;
+	background-color: #C55A11;
+	
+	padding: 10px 0 0 0;
+	
+	border: 0px;
+	outline: 0px;
+	border-radius: 25px 25px 0px 0px;
+	
+	cursor: pointer;
+	
+	float: left;
+}
+
+.follow_no_button {
+	width: 500px;
+	height: 75px;
+	
+	color: #C1C1C1;
+
+	box-shadow: inset 0px -4px 0px 0px #c1c1c1;
+	
+	padding: 10px 0 0 0;
+	
+	border: 0px;
+	outline: 0px;
+	border-radius: 25px 25px 0px 0px;
+	
+	cursor: pointer;
+	
+	float: left;
+}
+
+.follow_list {
+	
+}

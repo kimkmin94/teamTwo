@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WJChallenge">
+       <select id="ChatbotList" parameterType="java.lang.String" resultType="Challenge">
+			
+		SELECT C.*,H.HASHTAG_TEXT FROM(
+		      SELECT * FROM challenge
+		      WHERE chg_num
+		      IN (
+		          SELECT chg_num
+		          FROM (
+		                SELECT chg_num , count(chg_num) 
+		                FROM chg_chat_category
+		                WHERE (q_cnum, a_cnum)  IN(SELECT q_cnum , a_cnum
+		                                        FROM INTEREST_CATEGORY
+		                                        WHERE user_id_email = #{user_id_email} )
+		                GROUP BY chg_num
+		                HAVING count(chg_num) = 3
+		              )
+		          )
+		      AND chg_num NOT IN (SELECT chg_num
+                                  FROM PART_CHALLENGE
+                                  WHERE user_id_email = #{user_id_email})
+		      AND chg_master != #{user_id_email}
+		      AND chg_state = 1
+		      ORDER BY DBMS_RANDOM.RANDOM)C , (SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+	                                           FROM HASHTAG HO,HASHTAG2 HT
+	                                           WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+	                                           GROUP BY HO.CHG_NUM)H
+		   WHERE C.CHG_NUM = H.CHG_NUM(+) 
+		 <![CDATA[AND ROWNUM <= 3]]>
+       </select>
+       <select id="SearchTitleList" parameterType="java.lang.String" resultType="Challenge">
+         
+			        SELECT C.*, H.HASHTAG_TEXT
+					FROM CHALLENGE C ,(SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+					                  FROM HASHTAG HO,HASHTAG2 HT
+					                  WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+					                  GROUP BY HO.CHG_NUM)H
+					WHERE C.CHG_NUM = H.CHG_NUM(+)
+					AND CHG_TITLE LIKE '%#{mainSearchName}%';
+         
+       
+       </select>
+       
+       <select id="Chg_numTimeChk" parameterType="int" resultType="Challenge">
+                select *
+				from challenge
+				where chg_num = #{chg_num}
+       </select>
+       
+       <select id="category_ajax_listCount" parameterType="Main_category" resultType="Challenge">
+               select count(*) as count
+               from challenge
+               <choose>
+                  <when test="mc_num == 0 and sc_num == 0">
+                        where lc_num = #{lc_num}
+                  </when>
+                  <when test="sc_num == 0">
+                        where lc_num = #{lc_num} and mc_num = #{mc_num}
+                  </when>
+                  <otherwise>
+                        where lc_num = #{lc_num} and mc_num = #{mc_num} and sc_num = #{sc_num}
+                  </otherwise>
+               </choose>
+               
+       </select>
+       
+       <select id="category_ajax_List" parameterType="hashmap" resultType="wjListPaging">
+               
+               SELECT CHG_NUM , LC_NUM , MC_NUM ,SC_NUM , CHG_MASTER , MASTER_NICKNAME , CHG_REGDATE , CHG_STARTDATE , CHG_ENDDATE , CHG_CAPACITY ,
+       CHG_TITLE, CHG_CONTENTS , CHG_IMAGE , CHG_LIKE_COUNT , CHG_STATE , CHG_SAMPLE_IMAGE , CHG_SAMPLE_TEXT , CHG_NOW_PARTI,
+       HASHTAG_TEXT
+				FROM(
+				      SELECT * 
+				      FROM   (SELECT ROWNUM RN,C.* , H.HASHTAG_TEXT                          
+				              FROM  (SELECT * FROM CHALLENGE 
+				                    <choose>
+                  <when test="mc_num == 0 and sc_num == 0">
+                        where lc_num = #{lc_num}
+                  </when>
+                  <when test="sc_num == 0">
+                        where lc_num = #{lc_num} and mc_num = #{mc_num}
+                  </when>
+                  <otherwise>
+                        where lc_num = #{lc_num} and mc_num = #{mc_num} and sc_num = #{sc_num}
+                  </otherwise>
+                   </choose>
+                   <choose>
+                   <when test="choice == 2 ">
+                         and chg_state = 1
+                   </when>
+                   <when test="choice == 3 ">
+                         and chg_state = 3
+                   </when>
+                   <when test="choice == 4 ">
+                         and chg_state = 4
+                   </when>
+                   </choose>
+                   <choose>
+				     <when test="order == 1">
+				          order by CHG_NUM
+				     </when>
+				     <when test="order == 2">
+				          order by CHG_LIKE_COUNT DESC
+				     </when>
+				     <otherwise>
+				          order by CHG_NUM DESC
+				     </otherwise>
+				 </choose> ) C, (SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+				               FROM HASHTAG HO,HASHTAG2 HT
+				               WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+				               GROUP BY HO.CHG_NUM)H
+				 WHERE C.CHG_NUM = H.CHG_NUM(+) )
+		WHERE RN BETWEEN #{start_row} AND #{end_row})
+       </select>
+       <select id="selectcategorycnt" parameterType="hashmap" resultType="wjListPaging" >
+             select count(*) as count
+               from challenge
+               <choose>
+                  <when test="mc_num == 0 and sc_num == 0">
+                        where lc_num = #{lc_num}
+                  </when>
+                  <when test="sc_num == 0">
+                        where lc_num = #{lc_num} and mc_num = #{mc_num}
+                  </when>
+                  <otherwise>
+                        where lc_num = #{lc_num} and mc_num = #{mc_num} and sc_num = #{sc_num}
+                  </otherwise>
+               </choose>
+               <choose>
+                   <when test="choice == 2 ">
+                         and chg_state = 1
+                   </when>
+                   <when test="choice == 3 ">
+                         and chg_state = 3
+                   </when>
+                   <when test="choice == 4 ">
+                         and chg_state = 4
+                   </when>
+               </choose>
+       </select>
+       
+       <select id="searchAllCount" parameterType="java.lang.String" resultType="int">
+               select count(*)
+              from challenge
+             where chg_contents Like '%'||#{mainSearchName}||'%'
+             OR master_nickname Like '%'||#{mainSearchName}||'%'
+             OR chg_title Like '%'||#{mainSearchName}||'%'
+       </select>
+       
+       <select id="searchHashCount" parameterType="java.lang.String" resultType="int">
+             select count(*)
+			   from (select C.*,H.HASHTAG_TEXT
+			         from Challenge C ,(SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+							                    FROM HASHTAG HO,HASHTAG2 HT
+							                    WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+							                    GROUP BY HO.CHG_NUM)H
+			         WHERE C.CHG_NUM = H.CHG_NUM(+)
+			         AND H.HASHTAG_TEXT LIKE '%'||#{mainSearchName}||'%')
+       </select>
+       
+       <select id="searchTitleListCnt" parameterType="hashmap" resultType="wjListPaging">
+              select count(*) as count
+              from challenge
+              where chg_title LIKE '%'||#{searchName}||'%'
+       </select>
+       
+       <select id="searchAjax_maintitle" parameterType="hashmap" resultType="wjListPaging">
+               SELECT CHG_NUM , LC_NUM , MC_NUM ,SC_NUM , CHG_MASTER , MASTER_NICKNAME , CHG_REGDATE , CHG_STARTDATE , CHG_ENDDATE , CHG_CAPACITY ,
+       CHG_TITLE, CHG_CONTENTS , CHG_IMAGE , CHG_LIKE_COUNT , CHG_STATE , CHG_SAMPLE_IMAGE , CHG_SAMPLE_TEXT , CHG_NOW_PARTI,
+       HASHTAG_TEXT
+				FROM(
+				      SELECT * 
+				      FROM   (SELECT ROWNUM RN,C.* , H.HASHTAG_TEXT                          
+				              FROM  (SELECT * FROM CHALLENGE 
+				                     where chg_title like '%'||#{searchName}||'%'
+                   <choose>
+                   <when test="choice == 2 ">
+                         and chg_state = 1
+                   </when>
+                   <when test="choice == 3 ">
+                         and chg_state = 3
+                   </when>
+                   <when test="choice == 4 ">
+                         and chg_state = 4
+                   </when>
+                   </choose>
+                   <choose>
+				     <when test="order == 1">
+				          order by CHG_NUM
+				     </when>
+				     <when test="order == 2">
+				          order by CHG_LIKE_COUNT DESC
+				     </when>
+				     <otherwise>
+				          order by CHG_NUM DESC
+				     </otherwise>
+				 </choose> ) C, (SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+				               FROM HASHTAG HO,HASHTAG2 HT
+				               WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+				               GROUP BY HO.CHG_NUM)H
+				 WHERE C.CHG_NUM = H.CHG_NUM(+) )
+		WHERE RN BETWEEN #{start_row} AND #{end_row})
+       </select>
+       
+       <select id="countsearchTitleNew" parameterType="hashmap" resultType="wjListPaging">
+              select count(*) as count
+              from challenge
+              <choose>
+                   <when test="choice == 2 ">
+                         where chg_state = 1 and chg_title LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <when test="choice == 3 ">
+                         where chg_state = 3 and chg_title LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <when test="choice == 4 ">
+                         where chg_state = 4 and chg_title LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <otherwise>
+                         where chg_title like '%'||#{searchName}||'%'
+                   </otherwise>
+               </choose>
+       </select>
+       
+       <select id="searchContentListCnt" parameterType="hashmap" resultType="wjListPaging">
+              select count(*) as count
+              from challenge
+              where CHG_CONTENTS LIKE '%'||#{searchName}||'%'
+       </select>
+       
+       <select id="searchAjax_maincontent" parameterType="hashmap" resultType="wjListPaging"  >
+              SELECT CHG_NUM , LC_NUM , MC_NUM ,SC_NUM , CHG_MASTER , MASTER_NICKNAME , CHG_REGDATE , CHG_STARTDATE , CHG_ENDDATE , CHG_CAPACITY ,
+       CHG_TITLE, CHG_CONTENTS , CHG_IMAGE , CHG_LIKE_COUNT , CHG_STATE , CHG_SAMPLE_IMAGE , CHG_SAMPLE_TEXT , CHG_NOW_PARTI,
+       HASHTAG_TEXT
+				FROM(
+				      SELECT * 
+				      FROM   (SELECT ROWNUM RN,C.* , H.HASHTAG_TEXT                          
+				              FROM  (SELECT * FROM CHALLENGE 
+				                     where chg_contents like '%'||#{searchName}||'%'
+                   <choose>
+                   <when test="choice == 2 ">
+                         and chg_state = 1
+                   </when>
+                   <when test="choice == 3 ">
+                         and chg_state = 3
+                   </when>
+                   <when test="choice == 4 ">
+                         and chg_state = 4
+                   </when>
+                   </choose>
+                   <choose>
+				     <when test="order == 1">
+				          order by CHG_NUM
+				     </when>
+				     <when test="order == 2">
+				          order by CHG_LIKE_COUNT DESC
+				     </when>
+				     <otherwise>
+				          order by CHG_NUM DESC
+				     </otherwise>
+				 </choose> ) C, (SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+				               FROM HASHTAG HO,HASHTAG2 HT
+				               WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+				               GROUP BY HO.CHG_NUM)H
+				 WHERE C.CHG_NUM = H.CHG_NUM(+) )
+		        WHERE RN BETWEEN #{start_row} AND #{end_row})
+       </select>
+       
+       <select id="countsearchcontentNew" parameterType="hashmap" resultType="wjListPaging">
+            select count(*) as count
+              from challenge
+              <choose>
+                   <when test="choice == 2 ">
+                         where chg_state = 1 and chg_contents LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <when test="choice == 3 ">
+                         where chg_state = 3 and chg_contents LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <when test="choice == 4 ">
+                         where chg_state = 4 and chg_contents LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <otherwise>
+                         where chg_contents like '%'||#{searchName}||'%'
+                   </otherwise>
+               </choose>
+       </select>
+       
+       <select id="searchHashtagListCnt" parameterType="hashmap" resultType="wjListPaging">
+              select count(*) as count 
+			   from (select C.*,H.HASHTAG_TEXT
+			         from Challenge C ,(SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+							                    FROM HASHTAG HO,HASHTAG2 HT
+							                    WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+							                    GROUP BY HO.CHG_NUM)H
+			         WHERE C.CHG_NUM = H.CHG_NUM(+)
+			         AND H.HASHTAG_TEXT LIKE '%'||#{searchName}||'%' )
+       </select>
+       
+       <select id="searchAjax_mainhashtag" parameterType="hashmap" resultType="wjListPaging">
+              SELECT CHG_NUM , LC_NUM , MC_NUM ,SC_NUM , CHG_MASTER , MASTER_NICKNAME , CHG_REGDATE , CHG_STARTDATE , CHG_ENDDATE , CHG_CAPACITY ,
+       CHG_TITLE, CHG_CONTENTS , CHG_IMAGE , CHG_LIKE_COUNT , CHG_STATE , CHG_SAMPLE_IMAGE , CHG_SAMPLE_TEXT , CHG_NOW_PARTI,
+       HASHTAG_TEXT
+				FROM(
+				      SELECT * 
+				      FROM   (SELECT ROWNUM RN,C.* , H.HASHTAG_TEXT                          
+				              FROM  (SELECT * FROM CHALLENGE 
+                   <choose>
+                   <when test="choice == 2 ">
+                         where chg_state = 1
+                   </when>
+                   <when test="choice == 3 ">
+                         where chg_state = 3
+                   </when>
+                   <when test="choice == 4 ">
+                         where chg_state = 4
+                   </when>
+                   </choose>
+                   <choose>
+				     <when test="order == 1">
+				          order by CHG_NUM
+				     </when>
+				     <when test="order == 2">
+				          order by CHG_LIKE_COUNT DESC
+				     </when>
+				     <otherwise>
+				          order by CHG_NUM DESC
+				     </otherwise>
+				 </choose> ) C, (SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+				               FROM HASHTAG HO,HASHTAG2 HT
+				               WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+				               GROUP BY HO.CHG_NUM)H
+				 WHERE C.CHG_NUM = H.CHG_NUM(+)
+				 AND H.HASHTAG_TEXT LIKE '%'||#{searchName}||'%' )
+		        WHERE RN BETWEEN #{start_row} AND #{end_row})
+       </select>
+       
+       <select id="countsearchhashtagNew" parameterType="hashmap" resultType="wjListPaging">
+               select count(*) as count 
+			   from (select C.*,H.HASHTAG_TEXT
+			         from Challenge C ,(SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+							                    FROM HASHTAG HO,HASHTAG2 HT
+							                    WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+							                    GROUP BY HO.CHG_NUM)H
+			         WHERE C.CHG_NUM = H.CHG_NUM(+)
+			         <choose>
+                   <when test="choice == 2 ">
+                         and C.chg_state = 1 and H.HASHTAG_TEXT LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <when test="choice == 3 ">
+                         and C.chg_state = 3 and H.HASHTAG_TEXT LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <when test="choice == 4 ">
+                         and C.chg_state = 4 and H.HASHTAG_TEXT LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <otherwise>
+                         and H.HASHTAG_TEXT like '%'||#{searchName}||'%'
+                   </otherwise>
+                    </choose> )
+       </select>
+       
+       <select id="searchMasterListCnt" parameterType="hashmap" resultType="wjListPaging">
+             select count(*) as count
+              from challenge
+              where master_nickname LIKE '%'||#{searchName}||'%'
+       </select>
+       
+       <select id="searchAjax_mainmaster" parameterType="hashmap" resultType="wjListPaging">
+               SELECT CHG_NUM , LC_NUM , MC_NUM ,SC_NUM , CHG_MASTER , MASTER_NICKNAME , CHG_REGDATE , CHG_STARTDATE , CHG_ENDDATE , CHG_CAPACITY ,
+       CHG_TITLE, CHG_CONTENTS , CHG_IMAGE , CHG_LIKE_COUNT , CHG_STATE , CHG_SAMPLE_IMAGE , CHG_SAMPLE_TEXT , CHG_NOW_PARTI,
+       HASHTAG_TEXT
+				FROM(
+				      SELECT * 
+				      FROM   (SELECT ROWNUM RN,C.* , H.HASHTAG_TEXT                          
+				              FROM  (SELECT * FROM CHALLENGE 
+				                     where master_nickname like '%'||#{searchName}||'%'
+                   <choose>
+                   <when test="choice == 2 ">
+                         and chg_state = 1
+                   </when>
+                   <when test="choice == 3 ">
+                         and chg_state = 3
+                   </when>
+                   <when test="choice == 4 ">
+                         and chg_state = 4
+                   </when>
+                   </choose>
+                   <choose>
+				     <when test="order == 1">
+				          order by CHG_NUM
+				     </when>
+				     <when test="order == 2">
+				          order by CHG_LIKE_COUNT DESC
+				     </when>
+				     <otherwise>
+				          order by CHG_NUM DESC
+				     </otherwise>
+				 </choose> ) C, (SELECT HO.CHG_NUM,LISTAGG(HT.HASHTAG_TEXT,',') WITHIN GROUP (ORDER BY CHG_NUM) AS HASHTAG_TEXT 
+				               FROM HASHTAG HO,HASHTAG2 HT
+				               WHERE HO.HASHTAG_NUM=HT.HASHTAG_NUM
+				               GROUP BY HO.CHG_NUM)H
+				 WHERE C.CHG_NUM = H.CHG_NUM(+) )
+		        WHERE RN BETWEEN #{start_row} AND #{end_row})
+       </select>
+       
+       <select id="countsearchmasterNew" parameterType="hashmap" resultType="wjListPaging">
+              select count(*) as count
+              from challenge
+              <choose>
+                   <when test="choice == 2 ">
+                         where chg_state = 1 and master_nickname LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <when test="choice == 3 ">
+                         where chg_state = 3 and master_nickname LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <when test="choice == 4 ">
+                         where chg_state = 4 and master_nickname LIKE '%'||#{searchName}||'%'
+                   </when>
+                   <otherwise>
+                         where master_nickname like '%'||#{searchName}||'%'
+                   </otherwise>
+               </choose>
+       </select>
+       
+       <select id="selectCategory_count_all" parameterType="hashmap" resultType="int">
+             select count(*) as count
+               from challenge
+               <choose>
+                  <when test="mc_num == 0 and sc_num == 0">
+                        where lc_num = #{lc_num}
+                  </when>
+                  <when test="sc_num == 0">
+                        where lc_num = #{lc_num} and mc_num = #{mc_num}
+                  </when>
+                  <otherwise>
+                        where lc_num = #{lc_num} and mc_num = #{mc_num} and sc_num = #{sc_num}
+                  </otherwise>
+               </choose>
+       </select>
+</mapper>

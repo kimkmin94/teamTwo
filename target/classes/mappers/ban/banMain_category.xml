@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Main_category">
+
+
+	<select id="bycategory1" resultType="Main_category">
+		select lc_num, subject from
+		main_category
+		where mc_num = 0 and sc_num = 0
+	</select>
+
+	<select id="bycategory2" parameterType="int"
+		resultType="Main_category">
+			 <![CDATA[
+			select mc_num, subject from main_category
+			where lc_num =
+			#{lc_num} and sc_num = 0 and mc_num > 0
+			]]>
+	</select>
+
+	<select id="bycategory3" parameterType="Main_category"
+		resultType="Main_category">
+			<![CDATA[
+			select sc_num, subject from main_category
+			where lc_num = #{lc_num} and mc_num = #{mc_num} and sc_num > 0
+			]]>
+	</select>
+
+
+
+
+
+
+
+
+</mapper>

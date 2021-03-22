@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.teamTwo.hs.dao.UserInfoDao">
+	<select id="hslistAll" resultType="User_info">
+		select * from user_info
+	</select>
+	
+	<select id="hsStopUs" resultType="User_info">
+		update user_info set user_state = -2 where user_id_email = #{user_id_email}
+	</select>
+	
+	
+	<select id="hsRunUs" resultType="User_info">
+		update user_info set user_state = 1 where user_id_email = #{user_id_email}
+	</select>
+	
+	
+	<select id="hslistCm" resultType="Community">
+		select * from community
+	</select>
+	
+	<select id="hsUpdateCm" resultType="Community">
+		update community set b_state=-1 where b_Num = #{b_num}
+	</select>
+	
+	
+	<select id="hslistCh" resultType="Challenge">
+		select * from challenge
+	</select>
+	
+	<select id="hsDeleteCh" resultType="Challenge">
+		update challenge set chg_state = -1 where chg_num = #{chg_num}
+	</select>
+</mapper>

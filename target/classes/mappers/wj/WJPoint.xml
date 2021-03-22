@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Point">
+        <select id="pointList" resultType="wjPointUser_info">
+            
+            SELECT UN.*,U.* FROM       
+        USER_INFO UN,(SELECT U1.*
+        FROM POINT U1 ,(
+              SELECT USER_ID_EMAIL ,MAX(POINT_TIMESTAMP) AS POINT_TIMESTAMP 
+              FROM POINT
+              GROUP by USER_ID_EMAIL) U2
+        WHERE U1.USER_ID_EMAIL = U2.USER_ID_EMAIL
+        AND U1.POINT_TIMESTAMP = U2.POINT_TIMESTAMP
+        ORDER BY U1.POINT_BALANCE DESC)U
+	    WHERE UN.USER_ID_EMAIL = U.USER_ID_EMAIL
+		<![CDATA[AND ROWNUM <= 3]]>
+            
+        </select>
+</mapper>

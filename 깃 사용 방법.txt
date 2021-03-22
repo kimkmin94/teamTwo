@@ -1,0 +1,16 @@
+[ GIT 폴더 만들기 ]
+git config --global user.name "github 에 등록한 이름"
+git config --global user.email 'github 에 등록한 email'
+git init
+git remote add origin https://github.com/parkyoungsu/teamtwo.git
+git remote update
+git fetch
+git checkout main
+
+// main branch 에 있는 내용이 다운로드 받아짐.
+
+[ GIT 업로드 ]
+git add .
+git stauts
+git commit -m "commit 메세지"
+git push origin 브랜치 이름

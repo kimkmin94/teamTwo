@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.teamTwo.teamtwo.dao.ttDao">
+
+	<update id="ttUpdateState2" parameterType="Challenge">
+		<![CDATA[
+		update challenge set chg_state = 2 where chg_capacity <= chg_now_parti and chg_regdate <= sysdate and chg_startdate > sysdate
+		]]>
+	</update>
+	<update id="ttUpdateState3" parameterType="Challenge">
+		<![CDATA[
+		update challenge set chg_state = 3 where chg_state >= 1 and chg_state < 3 and chg_startdate <= sysdate and chg_enddate >= sysdate
+		]]>
+	</update>
+	<update id="ttUpdateState4" parameterType="Challenge">
+		<![CDATA[
+		update challenge set chg_state = 4 where chg_state =3 and chg_enddate < sysdate
+		]]>
+	</update>
+	<update id="ttUpdateState5" parameterType="Challenge">
+		<![CDATA[
+		update challenge set chg_state = 5, chg_enddate = chg_startdate where chg_now_parti < 5 and chg_startdate <= sysdate and chg_state != 5
+		]]>
+	</update>
+
+</mapper>
